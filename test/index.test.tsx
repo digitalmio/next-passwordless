@@ -2,6 +2,6 @@ import { NextPasswordless } from '../src';
 
 describe('root', () => {
   it('should snapshot main function', () => {
-    expect(NextPasswordless({})).toMatchSnapshot();
+    expect(NextPasswordless({ secret: 'abc123' })).toMatchSnapshot();
   });
 });
