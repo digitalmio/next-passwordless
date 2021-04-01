@@ -1,13 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { processCallback } from './actions/processCallback';
-import { returnError } from './actions/returnError';
 import { sendToken } from './actions/sendToken';
 import { defaultConfig, IConfig } from './config';
 
 export const NextPasswordless = (userConfig: IConfig) => (
   req: NextApiRequest,
   res: NextApiResponse
-): Promise<void> => {
+): Promise<void> | void => {
   const { nextPasswordless: path } = req.query;
   const { method } = req;
 
@@ -27,5 +26,5 @@ export const NextPasswordless = (userConfig: IConfig) => (
     return processCallback(config, req, res);
 
   // defaults to 404
-  return returnError(undefined, undefined, config, req, res);
+  return res.status(404).json({ status: 404, message: 'Page not found' });
 };
