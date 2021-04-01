@@ -13,20 +13,12 @@ export const generateToken = (
   payload: JwtTokenPayload,
   secret: string,
   expiry: string
-): Promise<string> =>
-  new Promise((resolve, reject) => {
-    jwt.sign(payload, secret, { expiresIn: expiry }, (err, token) => {
-      if (err) reject(err);
-      if (!token) reject('Token was not generated');
-      else resolve(token);
-    });
-  });
+) => jwt.sign(payload, secret, { expiresIn: expiry });
 
-export const decodeToken = (token: string, secret: string) =>
-  new Promise((resolve, reject) => {
-    jwt.verify(token, secret, (err, data) => {
-      if (err) reject(err);
-      if (!data) reject('Token cannot be decoded');
-      else resolve(data);
-    });
-  });
+export const decodeToken = (token: string, secret: string) => {
+  try {
+    return jwt.verify(token, secret);
+  } catch (e) {
+    return false;
+  }
+};

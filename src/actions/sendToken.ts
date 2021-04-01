@@ -20,7 +20,7 @@ export const sendToken = async (
   const code = generateCode();
 
   // generate JWT
-  const token = await generateToken(
+  const token = generateToken(
     { destination: req.body.destination, code },
     config.secret,
     config.linkExpiry
