@@ -6,7 +6,7 @@ import { parseConfig, IConfig } from './config';
 export const NextPasswordless = (userConfig: IConfig) => (
   req: NextApiRequest,
   res: NextApiResponse
-): Promise<void> | void => {
+): Promise<void | NextApiResponse<any>> | void => {
   const { nextPasswordless: path } = req.query;
   const { method } = req;
 
