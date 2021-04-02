@@ -1,5 +1,6 @@
-import { IConfig } from '../config';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { IConfig } from '../config';
+import { setLoginSession } from '../utils/auth';
 import { decodeToken } from '../utils/token';
 
 export const processCallback = async (
@@ -8,18 +9,16 @@ export const processCallback = async (
   res: NextApiResponse
 ) => {
   // no query token, no play!
-  if (!req.query?.token) {
+  // this will also show 400 if we got token as an array
+  if (!req.query?.token || typeof req.query?.token !== 'string') {
     return res.status(400).json({
       status: 400,
-      message: 'No token provided',
+      message: 'No auth token provided or token is misconfigured',
     });
   }
 
-  // validate user token
-  const tokenString =
-    typeof req.query.token === 'string' ? req.query.token : req.query.token[0];
-  const token = decodeToken(tokenString, config.secret);
-
+  // validate user token, show 404 on fake ones
+  const token = decodeToken(req.query.token, config.secret);
   if (!token) {
     return res.status(400).json({
       status: 400,
@@ -28,8 +27,8 @@ export const processCallback = async (
   }
 
   // set login session
+  await setLoginSession(res, token, config);
 
-  console.log({ token });
-
-  return res.json({ page: 'Process Callback get' });
+  // redirect, defaults to homepage
+  return res.redirect(config.redirectPath);
 };

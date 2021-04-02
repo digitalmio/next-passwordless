@@ -1,17 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { serialize, parse } from 'cookie';
 
-export const MAX_AGE = 60 * 60 * 8; // 8 hours
-
 export const setTokenCookie = (
   res: NextApiResponse,
   token: any,
   tokenName: string,
-  maxAge = 60 * 60 * 8
+  maxAge: number
 ) => {
   const cookie = serialize(tokenName, token, {
-    maxAge: maxAge,
-    expires: new Date(Date.now() + maxAge * 1000),
+    maxAge: maxAge / 1000,
+    expires: new Date(Date.now() + maxAge),
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     path: '/',

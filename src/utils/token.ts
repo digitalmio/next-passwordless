@@ -9,11 +9,8 @@ interface JwtTokenPayload {
 
 export const generateCode = () => nanoid(10);
 
-export const generateToken = (
-  payload: JwtTokenPayload,
-  secret: string,
-  expiry: string
-) => jwt.sign(payload, secret, { expiresIn: expiry });
+export const generateToken = (payload: JwtTokenPayload, secret: string, expiry: string) =>
+  jwt.sign(payload, secret, { expiresIn: expiry });
 
 export const decodeToken = (token: string, secret: string) => {
   try {

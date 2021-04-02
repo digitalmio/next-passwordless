@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { processCallback } from './actions/processCallback';
 import { sendToken } from './actions/sendToken';
-import { defaultConfig, IConfig } from './config';
+import { parseConfig, IConfig } from './config';
 
 export const NextPasswordless = (userConfig: IConfig) => (
   req: NextApiRequest,
@@ -11,7 +11,7 @@ export const NextPasswordless = (userConfig: IConfig) => (
   const { method } = req;
 
   // merge user config with defaults
-  const config = { ...defaultConfig, ...userConfig };
+  const config = parseConfig(userConfig);
 
   // check for empty secret
   if (!config.secret) {

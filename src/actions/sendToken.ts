@@ -9,10 +9,12 @@ export const sendToken = async (
   res: NextApiResponse
 ) => {
   // check if user provided email address, aka destination
-  if (!req.body?.destination) {
+  const { destination } = req.body;
+
+  if (!destination) {
     return res.status(400).json({
       status: 400,
-      message: 'You need to specify email address destination',
+      message: 'You need to specify destination email address',
     });
   }
 
@@ -23,13 +25,11 @@ export const sendToken = async (
   const token = generateToken(
     { destination: req.body.destination, code },
     config.secret,
-    config.linkExpiry
+    config.linkExpiry as string
   );
 
   // log token if on dev
-  logToken(config, { destination: req.body.destination, token, code });
-
-  // log URL if development, unless disabled in config
+  logToken(config, { destination, token, code });
 
   // send email
 
