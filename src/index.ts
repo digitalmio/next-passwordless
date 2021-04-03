@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { processCallback } from './actions/processCallback';
 import { sendToken } from './actions/sendToken';
+import { getSession } from './actions/getSession';
 import { parseConfig, IConfig } from './config';
 
 export const NextPasswordless = (userConfig: IConfig) => (
@@ -24,6 +25,10 @@ export const NextPasswordless = (userConfig: IConfig) => (
   // callback url
   if (path?.length === 1 && path[0] === 'callback' && method === 'GET')
     return processCallback(config, req, res);
+
+  // display user session data
+  if (path?.length === 1 && path[0] === 'session' && method === 'GET')
+    return getSession(config, req, res);
 
   // defaults to 404
   return res.status(404).json({ status: 404, message: 'Page not found' });

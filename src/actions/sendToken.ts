@@ -33,5 +33,6 @@ export const sendToken = async (
 
   // send email
 
-  return res.json({ page: 'Homepage post', config });
+  // return code
+  return res.json({ success: true, code });
 };
