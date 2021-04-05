@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { IConfig } from '../config';
+import { IConfigWithDefaults } from '../config';
 import { setLoginSession } from '../utils/auth';
 import { decodeToken } from '../utils/token';
 
 export const processCallback = async (
-  config: Required<IConfig>,
+  config: IConfigWithDefaults,
   req: NextApiRequest,
   res: NextApiResponse
 ) => {

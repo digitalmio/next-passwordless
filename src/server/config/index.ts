@@ -1,5 +1,5 @@
 import ms from 'ms';
-export interface IConfig {
+interface IConfigShared {
   secret: string;
   rootUrl: string;
   linkExpiry?: string | number;
@@ -11,7 +11,14 @@ export interface IConfig {
   redirectPath?: string;
 }
 
-const defaultConfig: Required<IConfig> = {
+interface IConfigOptionals {
+  generateEmailContent?: (code: string, link: string) => Promise<void>;
+  sendEmail?: (destination: string, html: string, text: string) => Promise<void>;
+}
+export interface IConfig extends IConfigShared, IConfigOptionals {}
+export interface IConfigWithDefaults extends Required<IConfigShared>, IConfigOptionals {}
+
+const defaultConfig: IConfigWithDefaults = {
   secret: '',
   rootUrl: '',
   linkExpiry: '1h',
@@ -23,9 +30,9 @@ const defaultConfig: Required<IConfig> = {
   redirectPath: '/',
 };
 
-export const parseConfig = (userConfig: IConfig): Required<IConfig> => {
-  // this is required by Hapi/Iron
-  if (userConfig.secret.length < 32)
+export const parseConfig = (userConfig: IConfig): IConfigWithDefaults => {
+  // this is required by Hapi/Iron, secret must be min 32 characters
+  if (!userConfig.cookieSecret && userConfig.secret.length < 32)
     throw new Error('Secret string too short (min 32 characters required)');
   if (userConfig.cookieSecret && userConfig.cookieSecret.length < 32)
     throw new Error('Cookie Secret string too short (min 32 characters required)');

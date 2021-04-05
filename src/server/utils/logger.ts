@@ -1,7 +1,7 @@
-import { IConfig } from '../config';
+import { IConfigWithDefaults } from '../config';
 
 export const logToken = (
-  config: Required<IConfig>,
+  config: IConfigWithDefaults,
   data: {
     destination: string;
     token: string;
