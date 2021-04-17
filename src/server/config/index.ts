@@ -11,15 +11,21 @@ type IConfigShared = {
   redirectPath?: string;
 };
 
+// Any Object String Number Boolean
+export type AnyObjectSNB = {
+  [key: string]: string | number | boolean;
+};
+
 type IConfigFunctions = {
-  generateEmailContent?: (
+  generateEmailContent: (
     code: string,
     link: string
   ) => Promise<string> | Promise<{ html: string; text: string }>;
-  sendEmail?: (destination: string, html: string, text?: string) => Promise<void>;
+  sendEmail: (destination: string, html: string, text?: string) => Promise<void>;
+  processUser?: (email: string) => Promise<AnyObjectSNB>;
 };
-export type IConfig = IConfigShared & Required<IConfigFunctions>;
-export type IConfigWithDefaults = Required<IConfigShared> & Required<IConfigFunctions>;
+export type IConfig = IConfigShared & IConfigFunctions;
+export type IConfigWithDefaults = Required<IConfigShared> & IConfigFunctions;
 
 const defaultConfig: Required<IConfigShared> = {
   secret: '',

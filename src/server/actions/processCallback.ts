@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { IConfigWithDefaults } from '../config';
+import { AnyObjectSNB, IConfigWithDefaults } from '../config';
 import { setLoginSession } from '../utils/auth';
 import { decodeToken } from '../utils/token';
 
@@ -26,8 +26,13 @@ export const processCallback = async (
     });
   }
 
+  // parse user
+  let user: AnyObjectSNB;
+  if (config.processUser) user = await config.processUser(token.destination);
+  else user = { email: token.destination };
+
   // set login session
-  await setLoginSession(res, token, config);
+  await setLoginSession(res, user, config);
 
   // redirect, defaults to homepage
   return res.redirect(config.redirectPath);

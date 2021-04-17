@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { processCallback } from './actions/processCallback';
 import { sendToken } from './actions/sendToken';
 import { getSession } from './actions/getSession';
+import { logout } from './actions/logout';
 import { parseConfig, IConfig } from './config';
 
 export const NextPasswordlessServer = (userConfig: IConfig) => (
@@ -29,6 +30,11 @@ export const NextPasswordlessServer = (userConfig: IConfig) => (
   // display user session data
   if (path?.length === 1 && path[0] === 'session' && method === 'GET')
     return getSession(config, req, res);
+
+  // logout
+  if (path?.length === 1 && path[0] === 'logout' && method === 'GET') {
+    return logout(config, req, res);
+  }
 
   // defaults to 404
   return res.status(404).json({ status: 404, message: 'Page not found' });
