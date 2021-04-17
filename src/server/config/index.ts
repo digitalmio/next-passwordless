@@ -1,5 +1,5 @@
 import ms from 'ms';
-interface IConfigShared {
+type IConfigShared = {
   secret: string;
   rootUrl: string;
   linkExpiry?: string | number;
@@ -9,16 +9,19 @@ interface IConfigShared {
   cookieName?: string;
   cookieSecret?: string;
   redirectPath?: string;
-}
+};
 
-interface IConfigOptionals {
-  generateEmailContent?: (code: string, link: string) => Promise<void>;
-  sendEmail?: (destination: string, html: string, text: string) => Promise<void>;
-}
-export interface IConfig extends IConfigShared, IConfigOptionals {}
-export interface IConfigWithDefaults extends Required<IConfigShared>, IConfigOptionals {}
+type IConfigFunctions = {
+  generateEmailContent?: (
+    code: string,
+    link: string
+  ) => Promise<string> | Promise<{ html: string; text: string }>;
+  sendEmail?: (destination: string, html: string, text?: string) => Promise<void>;
+};
+export type IConfig = IConfigShared & Required<IConfigFunctions>;
+export type IConfigWithDefaults = Required<IConfigShared> & Required<IConfigFunctions>;
 
-const defaultConfig: IConfigWithDefaults = {
+const defaultConfig: Required<IConfigShared> = {
   secret: '',
   rootUrl: '',
   linkExpiry: '1h',

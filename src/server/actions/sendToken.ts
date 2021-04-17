@@ -31,7 +31,21 @@ export const sendToken = async (
   // log token if on dev
   logToken(config, { destination, token, code });
 
-  // send email
+  // generate email html content
+  const emailContent = await config.generateEmailContent(
+    code,
+    `${config.rootUrl}api/auth/callback?token=${token}`
+  );
+
+  // determine if email should be sent, based on config params
+  const shouldSendEmail =
+    process.env.NODE_ENV !== 'development' ||
+    (process.env.NODE_ENV === 'development' && config.sendEmailsOnDev);
+
+  if (shouldSendEmail) {
+    if (typeof emailContent === 'string') await config.sendEmail(destination, emailContent);
+    else await config.sendEmail(destination, emailContent.html, emailContent.text);
+  }
 
   // return code
   return res.json({ success: true, code });
