@@ -10,5 +10,5 @@ export const getSession = async (
   const session = await getLoginSession(req, config);
 
   // display user data
-  return session ? res.json(session) : res.status(401).send({});
+  return session ? res.json(session) : res.status(401).end();
 };
